@@ -1,0 +1,63 @@
+shell -$SHELL                           # Make the shell in every window as a login shell
+ 
+#escape ``                              # use ` instesd of Ctrl-A
+startup_message off                     # default: on  (нахрен нам страница приветсвия)
+autodetach on                           # default: off ( для работы по ssh самое оно )
+defscrollback 10240                     # default: 100 (# количество сохраненных строк)
+crlf off                                # default: off (# при копировании строки будут разделяться символами CR — LF	)
+ 
+altscreen on				# (поддержка alternate screen, типо отчистка экрана при выходе из манов и пр.)
+silencewait 15                          # default: 30
+msgminwait 0                            # the first message is ignored
+msgwait 10                              # default 5 (The last message is displayed for 10 seconds or until keypress)
+ 
+vbell on                                # default: off
+vbell_msg "   -- Ring, Ring!! --   "    # default: "Wuff,Wuff!!"
+#vbell_msg "bell on %t(%n)"
+
+idle 30 eval "screen cmatrix -f -o -u 10" "idle 0" ###как же мы без скринсейвера
+
+#сообщение если есть активность в наблюдаемом окне 
+#activity ""
+activity "Activity in %t(%n)"
+ 
+#hardstatus alwayslastline
+#hardstatus string  '%{= wk} %=%{b} %t(%n) %{r}[%l]'
+#caption always '%{= wk}%?%-Lw%?%{b}[%{k}%n*%f%t%?(%u)%?%{b}]%{k}%?%+Lw%?%?%= %D %d %M %Y %c:%s%{-}'
+ 
+# Other views for status strings
+#
+#hardstatus string '%{= bb}%{+b w}%n %h %=%t %d-%m-%Y %c'
+#caption always "%{=}%?%{R}%H %L=%{+b}%?%{y}%-Lw%47L>%?%{g}%n*%f %t %?%{y}%+Lw%?%{b}%-31=%c %l %Y-%m-%d"
+#
+#caption always "%{= 45}%{+b w}Screen: %n | %h %=%t %c"
+#hardstatus alwayslastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
+ 
+# logging
+#deflog on
+logfile $HOME/logs/screen_%Y-%m-%d_%0c_%n.log
+ 
+# starting windows
+chdir                     # Go to HomeDir
+#screen -t tcsh 1 tcsh
+#screen -t mc 2 mc
+#screen -t sumc 3 sudo mc
+#chdir /var/log            # Go to LogsDir
+#screen -t logs 4
+#select 2                  # Select mc window
+
+#Превращаем строку хард-статуса в динамический заголовок окна urxvt|xterm|aterm
+backtick 1 5 5 true
+termcapinfo rxvt* 'hs:ts=\E]2;:fs=\007:ds=\E]2;\007'
+hardstatus string "screen (%n: %t)"
+caption string "%{= kw}%Y-%m-%d;%c %{= kw}%-Lw%{= kG}%{+b}[%n %t]%{-b}%{= kw}%+Lw%1`"
+caption always
+#hardstatus alwayslastline "%?%{yk}%-Lw%?%{wb}%n*%f %t%?(%u)%?%?%{yk}%+Lw%?"
+#Используем механизм прокрутки X
+termcapinfo xterm* ti@:te@
+#Исправление проблемы с остатками текста
+altscreen on
+
+# вешаем ^a + на увеличение окон на 3 и ^a - на уменьшение на 1
+bind + resize +3
+bind - resize -1
